@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+cd /usr/src/app
+while sleep 0.1
+do
+{
+    # escape "$" here so the timestamp will be evaluated when the command is executed
+    find . -name '*.go' -o -name 'go.mod' | entr -cdnrs \
+        "echo ================ start dev @ \$(TZ=Asia/Shanghai date) ================ \
+        && staticcheck ./... \
+        && go vet ./... \
+        && revive ./... \
+        && go run ./cmd/backend/*.go"
+}
+done

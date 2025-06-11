@@ -1,0 +1,21 @@
+name: ${NAME}
+services:
+  web:
+    build:
+      context: ${ROOT}
+      dockerfile: ${ROOT}/dev/Dockerfile
+      args:
+        - IMAGE_GO=${IMAGE_GO}
+        - VERSION_STATICCHECK=${VERSION_STATICCHECK}
+        - VERSION_REVIVE=${VERSION_REVIVE}
+    command: /usr/src/app/dev/start-dev
+    volumes:
+      - ${ROOT}:/usr/src/app
+      - go-modules:/go/pkg
+      - go-build:/root/.cache/go-build
+    labels:
+      - dev.orbstack.domains=${NAME}.orb.local
+
+volumes:
+  go-modules:
+  go-build:
