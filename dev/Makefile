@@ -7,11 +7,11 @@ IMAGE_NODE?=node:24.2.0-bookworm
 REPO?=$(shell git config --get remote.origin.url | sed -E 's|git@||; s|https://||; s|\.git$$||; s|:|/|')
 # github.com/user/repo => repo
 REPO_NAME?=$(shell echo $(REPO) | sed -E 's|.*/||')
-PROJECT_ROOT?=$(shell git rev-parse --show-toplevel)
+REPO_ROOT?=$(shell git rev-parse --show-toplevel)
 GIT_COMMIT?=$(shell git rev-parse --short HEAD)
 GIT_DIRTY?=$(shell test -n "`git status --porcelain`" && echo "+DIRTY" || true)
 VERSION_FLAG=-X $(REPO).VersionString=$(GIT_COMMIT)$(GIT_DIRTY)
-DOCKER_CMD=COMPOSE_BAKE=true NAME=$(REPO_NAME) ROOT=$(PROJECT_ROOT) IMAGE_GO=$(IMAGE_GO) VERSION_STATICCHECK=$(VERSION_STATICCHECK) VERSION_REVIVE=$(VERSION_REVIVE) IMAGE_NODE=$(IMAGE_NODE) docker compose -f $(PROJECT_ROOT)/dev/docker-compose.yml
+DOCKER_CMD=COMPOSE_BAKE=true REPO_NAME=$(REPO_NAME) REPO_ROOT=$(REPO_ROOT) IMAGE_GO=$(IMAGE_GO) VERSION_STATICCHECK=$(VERSION_STATICCHECK) VERSION_REVIVE=$(VERSION_REVIVE) IMAGE_NODE=$(IMAGE_NODE) docker compose -f $(REPO_ROOT)/dev/docker-compose.yml
 
 dev: ## start dev server for both backend & frontend
 	@$(DOCKER_CMD) up --build --renew-anon-volumes

@@ -1,33 +1,34 @@
-name: ${NAME}
+name: ${REPO_NAME}
 services:
   backend:
     build:
-      context: ${ROOT}
-      dockerfile: ${ROOT}/dev/backend/Dockerfile
+      context: ${REPO_ROOT}
+      dockerfile: ${REPO_ROOT}/dev/backend/Dockerfile
       args:
         - IMAGE_GO=${IMAGE_GO}
         - VERSION_STATICCHECK=${VERSION_STATICCHECK}
         - VERSION_REVIVE=${VERSION_REVIVE}
     command: /usr/src/app/dev/backend/start-dev
     volumes:
-      - ${ROOT}:/usr/src/app
+      - ${REPO_ROOT}:/usr/src/app
       - go-modules:/go/pkg
       - go-build:/root/.cache/go-build
     labels:
-      - dev.orbstack.domains=api.${NAME}.orb.local
+      - dev.orbstack.domains=api.${REPO_NAME}.orb.local
 
   frontend:
     build:
-      context: ${ROOT}
-      dockerfile: ${ROOT}/dev/frontend/Dockerfile
+      context: ${REPO_ROOT}
+      dockerfile: ${REPO_ROOT}/dev/frontend/Dockerfile
       args:
         - IMAGE_NODE=${IMAGE_NODE}
+        - REPO_NAME=${REPO_NAME}
     command: /usr/src/app/dev/frontend/start-dev
     volumes:
-      - ${ROOT}:/usr/src/app
+      - ${REPO_ROOT}:/usr/src/app
       - pnpm-store:/pnpm/.pnpm-store
     labels:
-      - dev.orbstack.domains=${NAME}.orb.local
+      - dev.orbstack.domains=${REPO_NAME}.orb.local
       - dev.orbstack.http-port=5173
 
 volumes:
