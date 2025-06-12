@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+cd /usr/src/app/frontend
+# fresh cloned repo need this
+[ ! -d "node_modules" ] && pnpm install
+pnpm run dev
