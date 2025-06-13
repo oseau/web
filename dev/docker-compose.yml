@@ -8,6 +8,8 @@ services:
         - IMAGE_GO=${IMAGE_GO}
         - VERSION_STATICCHECK=${VERSION_STATICCHECK}
         - VERSION_REVIVE=${VERSION_REVIVE}
+    environment:
+      LDFLAGS: ${LDFLAGS}
     command: /usr/src/app/dev/backend/start-dev
     volumes:
       - ${REPO_ROOT}:/usr/src/app

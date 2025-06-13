@@ -10,11 +10,11 @@ REPO_NAME?=$(shell echo $(REPO) | sed -E 's|.*/||')
 REPO_ROOT?=$(shell git rev-parse --show-toplevel)
 GIT_COMMIT?=$(shell git rev-parse --short HEAD)
 GIT_DIRTY?=$(shell test -n "`git status --porcelain`" && echo "+DIRTY" || true)
-VERSION_FLAG=-X $(REPO).VersionString=$(GIT_COMMIT)$(GIT_DIRTY)
-DOCKER_CMD=COMPOSE_BAKE=true REPO_NAME=$(REPO_NAME) REPO_ROOT=$(REPO_ROOT) IMAGE_GO=$(IMAGE_GO) VERSION_STATICCHECK=$(VERSION_STATICCHECK) VERSION_REVIVE=$(VERSION_REVIVE) IMAGE_NODE=$(IMAGE_NODE) docker compose -f $(REPO_ROOT)/dev/docker-compose.yml
+LDFLAGS?="-X 'github.com/oseau/web.VersionString=$(GIT_COMMIT)$(GIT_DIRTY)' -X 'github.com/oseau/web/cmd/http.URLFrontend=https://$(REPO_NAME).orb.local'"
+DOCKER_CMD=COMPOSE_BAKE=true REPO_NAME=$(REPO_NAME) REPO_ROOT=$(REPO_ROOT) IMAGE_GO=$(IMAGE_GO) VERSION_STATICCHECK=$(VERSION_STATICCHECK) VERSION_REVIVE=$(VERSION_REVIVE) LDFLAGS=$(LDFLAGS) IMAGE_NODE=$(IMAGE_NODE) docker compose -f $(REPO_ROOT)/dev/docker-compose.yml
 
 dev: ## start dev server for both backend & frontend
-	@$(DOCKER_CMD) up --build --renew-anon-volumes
+	@$(DOCKER_CMD) up --build --renew-anon-volumes --remove-orphans
 
 shell-backend: ## login running backend server
 	@$(DOCKER_CMD) exec backend bash
