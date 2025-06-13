@@ -3,8 +3,6 @@ import typescriptLogo from "./typescript.svg";
 import viteLogo from "/vite.svg";
 import { setupCounter } from "./counter.ts";
 
-const version = await fetch("https://api.web.orb.local/version");
-
 document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
   <div>
     <a href="https://vite.dev" target="_blank">
@@ -21,9 +19,14 @@ document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
       Click on the Vite and TypeScript logos to learn more
     </p>
     <p class="read-the-docs">
-      Version: ${await version.text()}
+      Version: <span id="version">__VERSION__</span>
     </p>
   </div>
 `;
 
-setupCounter(document.querySelector<HTMLButtonElement>("#counter")!);
+window.addEventListener("load", async () => {
+  document.getElementById("version")!.textContent = await (
+    await fetch("https://api.web.orb.local/version")
+  ).text();
+  setupCounter(document.querySelector<HTMLButtonElement>("#counter")!);
+});
