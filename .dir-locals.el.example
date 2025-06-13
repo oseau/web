@@ -1,0 +1,6 @@
+((typescript-mode
+  . ((eglot-server-programs
+      . (((typescript-mode :language-id "typescript")
+          . ("typescript-language-server" "--stdio"
+             :initializationOptions
+             (:tsserver (:path "./frontend/node_modules/typescript/lib")))))))))
