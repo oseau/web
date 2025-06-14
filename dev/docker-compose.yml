@@ -24,7 +24,9 @@ services:
       dockerfile: ${REPO_ROOT}/dev/frontend/Dockerfile
       args:
         - IMAGE_NODE=${IMAGE_NODE}
-        - REPO_NAME=${REPO_NAME}
+    environment:
+      REPO_NAME: ${REPO_NAME}
+      VITE_API_URL: ${API_URL}
     command: /usr/src/app/dev/frontend/start-dev
     volumes:
       - ${REPO_ROOT}:/usr/src/app

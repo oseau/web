@@ -26,7 +26,7 @@ document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
 
 window.addEventListener("load", async () => {
   document.getElementById("version")!.textContent = await (
-    await fetch("https://api.web.orb.local/version")
+    await fetch(`${import.meta.env.VITE_API_URL}/version`)
   ).text();
   setupCounter(document.querySelector<HTMLButtonElement>("#counter")!);
 });

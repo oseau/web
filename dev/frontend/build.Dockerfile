@@ -2,9 +2,10 @@ ARG IMAGE_NODE
 ARG IMAGE_NGINX
 FROM ${IMAGE_NODE} AS build
 
-ARG REPO_NAME
+ARG API_URL
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
+ENV VITE_API_URL=${API_URL}
 RUN corepack enable
 RUN pnpm config set store-dir "$PNPM_HOME/.pnpm-store"
 

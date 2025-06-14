@@ -16,7 +16,9 @@ GIT_COMMIT?=$(shell git rev-parse --short HEAD)
 GIT_DIRTY?=$(shell test -n "`git status --porcelain`" && echo "+DIRTY" || true)
 LDFLAGS?="-X 'github.com/oseau/web.VersionString=dev' -X 'github.com/oseau/web/cmd/http.URLFrontend=https://$(REPO_NAME).orb.local'"
 LDFLAGS_PROD?="-X 'github.com/oseau/web.VersionString=$(GIT_COMMIT)$(GIT_DIRTY)' -X 'github.com/oseau/web/cmd/http.URLFrontend=https://$(DOMAIN_PROD)'"
-DOCKER_CMD=COMPOSE_BAKE=true REPO_NAME=$(REPO_NAME) REPO_ROOT=$(REPO_ROOT) IMAGE_GO=$(IMAGE_GO) VERSION_STATICCHECK=$(VERSION_STATICCHECK) VERSION_REVIVE=$(VERSION_REVIVE) LDFLAGS=$(LDFLAGS) IMAGE_NODE=$(IMAGE_NODE) docker compose -f $(REPO_ROOT)/dev/docker-compose.yml
+API_URL?=https://api.$(REPO_NAME).orb.local
+API_URL_PROD?=https://api.$(DOMAIN_PROD)
+DOCKER_CMD=COMPOSE_BAKE=true REPO_NAME=$(REPO_NAME) REPO_ROOT=$(REPO_ROOT) IMAGE_GO=$(IMAGE_GO) VERSION_STATICCHECK=$(VERSION_STATICCHECK) VERSION_REVIVE=$(VERSION_REVIVE) LDFLAGS=$(LDFLAGS) IMAGE_NODE=$(IMAGE_NODE) API_URL=$(API_URL) docker compose -f $(REPO_ROOT)/dev/docker-compose.yml
 
 dev: ## start dev server for both backend & frontend
 	@$(DOCKER_CMD) up --build --renew-anon-volumes --remove-orphans
@@ -29,4 +31,4 @@ shell-frontend: ## login running frontend server
 
 build: ## build for deploy
 	@docker buildx build --platform linux/amd64 --file $(REPO_ROOT)/dev/backend/build.Dockerfile --build-arg IMAGE_GO=$(IMAGE_GO) --build-arg IMAGE_GO_PROD=$(IMAGE_GO_PROD) --build-arg VERSION_XX=$(VERSION_XX) --build-arg LDFLAGS=$(LDFLAGS_PROD) --tag backend-$(REPO_NAME)-prod $(REPO_ROOT)
-	@docker buildx build --platform linux/amd64 --file $(REPO_ROOT)/dev/frontend/build.Dockerfile --build-arg IMAGE_NODE=$(IMAGE_NODE) --build-arg IMAGE_NGINX=$(IMAGE_NGINX) --tag frontend-$(REPO_NAME)-prod $(REPO_ROOT)
+	@docker buildx build --platform linux/amd64 --file $(REPO_ROOT)/dev/frontend/build.Dockerfile --build-arg IMAGE_NODE=$(IMAGE_NODE) --build-arg API_URL=$(API_URL_PROD) --build-arg IMAGE_NGINX=$(IMAGE_NGINX) --tag frontend-$(REPO_NAME)-prod $(REPO_ROOT)
