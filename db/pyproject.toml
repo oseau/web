@@ -1,0 +1,12 @@
+[project]
+name = "db"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "sqlean-py>=3.49.1",
+    "sqlite-dump>=0.1.1",
+    "sqlite-migrate>=0.1b0",
+    "sqlite-utils>=3.38",
+]

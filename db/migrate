@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+sqlite-utils migrate web.db ./migrations.py

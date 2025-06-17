@@ -6,6 +6,7 @@ VERSION_XX?=1.6.1
 IMAGE_GO_PROD?=gcr.io/distroless/base-debian12
 IMAGE_NODE?=node:24.2.0-bookworm
 IMAGE_NGINX?=nginx:1.28.0-alpine
+IMAGE_UV?=ghcr.io/astral-sh/uv:python3.13-bookworm-slim
 # git@github.com:user/repo.git or https://github.com/user/repo.git
 # => github.com/user/repo
 REPO?=$(shell git config --get remote.origin.url | sed -E 's|git@||; s|https://||; s|\.git$$||; s|:|/|')
@@ -18,15 +19,18 @@ LDFLAGS?="-X 'github.com/oseau/web.VersionString=dev' -X 'github.com/oseau/web/c
 LDFLAGS_PROD?="-X 'github.com/oseau/web.VersionString=$(GIT_COMMIT)$(GIT_DIRTY)' -X 'github.com/oseau/web/cmd/http.URLFrontend=https://$(DOMAIN_PROD)'"
 API_URL?=https://api.$(REPO_NAME).orb.local
 API_URL_PROD?=https://api.$(DOMAIN_PROD)
-DOCKER_CMD=COMPOSE_BAKE=true REPO_NAME=$(REPO_NAME) REPO_ROOT=$(REPO_ROOT) IMAGE_GO=$(IMAGE_GO) VERSION_STATICCHECK=$(VERSION_STATICCHECK) VERSION_REVIVE=$(VERSION_REVIVE) LDFLAGS=$(LDFLAGS) IMAGE_NODE=$(IMAGE_NODE) API_URL=$(API_URL) docker compose -f $(REPO_ROOT)/dev/docker-compose.yml
+DOCKER_CMD=COMPOSE_BAKE=true REPO_NAME=$(REPO_NAME) REPO_ROOT=$(REPO_ROOT) IMAGE_GO=$(IMAGE_GO) VERSION_STATICCHECK=$(VERSION_STATICCHECK) VERSION_REVIVE=$(VERSION_REVIVE) LDFLAGS=$(LDFLAGS) IMAGE_NODE=$(IMAGE_NODE) API_URL=$(API_URL) IMAGE_UV=$(IMAGE_UV) docker compose -f $(REPO_ROOT)/dev/docker-compose.yml
 
 dev: ## start dev server for both backend & frontend
 	@$(DOCKER_CMD) up --build --renew-anon-volumes --remove-orphans
 
-shell-backend: ## login running backend server
+shell-backend: ## login running backend container
 	@$(DOCKER_CMD) exec backend bash
 
-shell-frontend: ## login running frontend server
+shell-db: ## login running db container
+	@$(DOCKER_CMD) exec db bash
+
+shell-frontend: ## login running frontend container
 	@$(DOCKER_CMD) exec frontend bash
 
 build: ## build for deploy

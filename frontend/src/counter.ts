@@ -1,9 +1,21 @@
-export function setupCounter(element: HTMLButtonElement) {
-  let counter = 0;
+export async function setupCounter(element: HTMLButtonElement) {
+  let counter = (
+    await (await fetch(`${import.meta.env.VITE_API_URL}/count`)).json()
+  ).count;
   const setCounter = (count: number) => {
     counter = count;
-    element.innerHTML = `count  is ${counter}`;
+    element.innerHTML = `count is ${counter}`;
   };
-  element.addEventListener("click", () => setCounter(counter + 1));
-  setCounter(0);
+  const setCounterRemote = async () => {
+    await fetch(`${import.meta.env.VITE_API_URL}/count_update`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ count: counter }),
+    });
+  };
+  setCounter(counter);
+  element.addEventListener("click", async () => {
+    setCounter(counter + 1);
+    await setCounterRemote();
+  });
 }

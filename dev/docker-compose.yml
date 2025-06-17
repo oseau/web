@@ -15,8 +15,19 @@ services:
       - ${REPO_ROOT}:/usr/src/app
       - go-modules:/go/pkg
       - go-build:/root/.cache/go-build
+      - ${REPO_ROOT}/db/web.db:/db/web.db
     labels:
       - dev.orbstack.domains=api.${REPO_NAME}.orb.local
+
+  db:
+    build:
+      context: ${REPO_ROOT}
+      dockerfile: ${REPO_ROOT}/dev/db/Dockerfile
+      args:
+        - IMAGE_UV=${IMAGE_UV}
+    command: ["sleep", "infinity"]
+    volumes:
+      - ${REPO_ROOT}/db:/db
 
   frontend:
     build:

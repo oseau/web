@@ -2,8 +2,6 @@ package http
 
 import (
 	"net/http"
-
-	"github.com/oseau/web"
 )
 
 // Server is the http server
@@ -18,8 +16,9 @@ func NewServer() Server {
 // returns a ServeMux to be used by http.Server
 func (s *Server) Handler() http.Handler {
 	mux := http.NewServeMux()
-	mux.HandleFunc("/version", func(w http.ResponseWriter, _ *http.Request) {
-		w.Write([]byte(web.VersionString))
-	})
+	h := NewHandler()
+	mux.HandleFunc("/version", getVersion)
+	mux.HandleFunc("/count", h.getCounter)
+	mux.HandleFunc("/count_update", h.setCounter)
 	return withTimer()(withCors(mux))
 }
