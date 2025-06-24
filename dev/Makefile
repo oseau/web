@@ -36,3 +36,4 @@ shell-frontend: ## login running frontend container
 build: ## build for deploy
 	@docker buildx build --platform linux/amd64 --file $(REPO_ROOT)/dev/backend/build.Dockerfile --build-arg IMAGE_GO=$(IMAGE_GO) --build-arg IMAGE_GO_PROD=$(IMAGE_GO_PROD) --build-arg VERSION_XX=$(VERSION_XX) --build-arg LDFLAGS=$(LDFLAGS_PROD) --tag backend-$(REPO_NAME)-prod $(REPO_ROOT)
 	@docker buildx build --platform linux/amd64 --file $(REPO_ROOT)/dev/frontend/build.Dockerfile --build-arg IMAGE_NODE=$(IMAGE_NODE) --build-arg API_URL=$(API_URL_PROD) --build-arg IMAGE_NGINX=$(IMAGE_NGINX) --tag frontend-$(REPO_NAME)-prod $(REPO_ROOT)
+	@docker buildx build --platform linux/amd64 --file $(REPO_ROOT)/dev/db/build.Dockerfile --build-arg IMAGE_UV=$(IMAGE_UV) --tag db-$(REPO_NAME)-prod $(REPO_ROOT)

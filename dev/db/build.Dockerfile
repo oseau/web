@@ -3,8 +3,6 @@ FROM ${IMAGE_UV}
 
 ENV UV_COMPILE_BYTECODE=1
 ENV UV_LINK_MODE=copy
-# so that we could have a separate .venv for our dev lsp outside docker
-ENV UV_PROJECT_ENVIRONMENT=/usr/local
 
 WORKDIR /usr/src/app/db
 
@@ -13,6 +11,8 @@ RUN --mount=type=cache,target=/root/.cache/uv \
     --mount=type=bind,source=db/uv.lock,target=uv.lock \
     --mount=type=bind,source=db/pyproject.toml,target=pyproject.toml \
     uv sync --locked --no-dev
+
+COPY db/ ./
 
 # Reset the entrypoint, don't invoke `uv`
 ENTRYPOINT []

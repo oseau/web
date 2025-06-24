@@ -27,7 +27,7 @@ services:
         - IMAGE_UV=${IMAGE_UV}
     command: ["sleep", "infinity"]
     volumes:
-      - ${REPO_ROOT}/db:/db
+      - ${REPO_ROOT}:/usr/src/app
 
   frontend:
     build:
