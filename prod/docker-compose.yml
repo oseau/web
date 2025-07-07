@@ -1,0 +1,35 @@
+name: ${REPO_NAME}
+services:
+  backend:
+    image: ${REPO_NAME}-prod-backend:latest
+    restart: always
+    volumes:
+      - ${REPO_ROOT}/db:/db
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.${REPO_NAME}-backend.rule=Host(`${API_DOMAIN_PROD}`)
+      - traefik.http.routers.${REPO_NAME}-backend.entrypoints=web
+      - traefik.http.routers.${REPO_NAME}-backend.service=${REPO_NAME}-backend
+      - traefik.http.services.${REPO_NAME}-backend.loadbalancer.server.port=80
+    networks:
+      - traefik-containers
+
+  frontend:
+    image: ${REPO_NAME}-prod-frontend:latest
+    restart: always
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.${REPO_NAME}-frontend.rule=Host(`${DOMAIN_PROD}`) || Host(`www.${DOMAIN_PROD}`)
+      - traefik.http.middlewares.${REPO_NAME}-redirect-to-non-www.redirectregex.regex=^https?://www.${DOMAIN_PROD}/(.*)
+      - traefik.http.middlewares.${REPO_NAME}-redirect-to-non-www.redirectregex.replacement=https://${DOMAIN_PROD}/$${1}
+      - traefik.http.middlewares.${REPO_NAME}-redirect-to-non-www.redirectregex.permanent=true
+      - traefik.http.routers.${REPO_NAME}-frontend.middlewares=${REPO_NAME}-redirect-to-non-www
+      - traefik.http.routers.${REPO_NAME}-frontend.entrypoints=web
+      - traefik.http.routers.${REPO_NAME}-frontend.service=${REPO_NAME}-frontend
+      - traefik.http.services.${REPO_NAME}-frontend.loadbalancer.server.port=80
+    networks:
+      - traefik-containers
+
+networks:
+  traefik-containers:
+    external: true

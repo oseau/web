@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-sqlite-utils migrate web.db ./migrations.py
+uv run sqlite-utils migrate web.db ./migrations.py
