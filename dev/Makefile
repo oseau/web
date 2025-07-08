@@ -1,11 +1,14 @@
-dev: ## start dev server for both backend & frontend
+dev: ## start dev server for both backend & frontend (db will be created/migrated)
 	@$(DOCKER_CMD) up --build --renew-anon-volumes --remove-orphans
+
+migrate: ## migrate/create db
+	@docker run --rm -it -v $(REPO_ROOT):/usr/src/app -w /usr/src/app/db $(REPO_NAME)-db /usr/src/app/db/migrate
 
 shell-backend: ## login running backend container
 	@$(DOCKER_CMD) exec backend bash
 
-shell-db: ## login running db container
-	@$(DOCKER_CMD) exec db bash
+shell-db: ## start a new db container (uses compose-built image)
+	@docker run --rm -it -v $(REPO_ROOT):/usr/src/app -w /usr/src/app/db $(REPO_NAME)-db bash
 
 shell-frontend: ## login running frontend container
 	@$(DOCKER_CMD) exec frontend bash

@@ -16,6 +16,9 @@ services:
       - go-modules:/go/pkg
       - go-build:/root/.cache/go-build
       - ${REPO_ROOT}/db/web.db:/db/web.db
+    depends_on:
+      db:
+        condition: service_completed_successfully
     labels:
       - dev.orbstack.domains=api.${REPO_NAME}.orb.local
 
@@ -25,7 +28,7 @@ services:
       dockerfile: ${REPO_ROOT}/dev/db/Dockerfile
       args:
         - IMAGE_UV=${IMAGE_UV}
-    command: ["sleep", "infinity"]
+    command: ["/usr/src/app/db/migrate"]
     volumes:
       - ${REPO_ROOT}:/usr/src/app
 
