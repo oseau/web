@@ -1,3 +1,4 @@
 #!/usr/bin/env bash
 
 uv run sqlite-utils migrate web.db ./migrations.py
+uv run sqlite-utils enable-wal *.db
