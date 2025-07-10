@@ -12,6 +12,9 @@ shell-db: ## login running db container
 	@docker load < $(REPO_ROOT)/tmp/$(REPO_NAME)-prod-db.tar.gz
 	@docker run --rm -it -v $(REPO_ROOT)/db:/db -w /db $(REPO_NAME)-prod-db:latest bash
 
+shell-frontend: ## login running frontend container
+	@$(DOCKER_CMD) exec -w /usr/share/nginx/html frontend sh
+
 init: ## init on new server, this also runs `make migrate` to create db first.
 	@docker load < $(REPO_ROOT)/tmp/$(REPO_NAME)-prod-backend.tar.gz
 	@docker load < $(REPO_ROOT)/tmp/$(REPO_NAME)-prod-frontend.tar.gz
