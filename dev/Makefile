@@ -11,7 +11,10 @@ shell-db: ## start a new db container (uses compose-built image)
 	@docker run --rm -it -v $(REPO_ROOT):/usr/src/app -v $(REPO_ROOT)/data:/data -w /usr/src/app/db $(REPO_NAME)-db bash
 
 shell-frontend: ## login running frontend container
-	@$(DOCKER_CMD) exec frontend bash
+	@$(DOCKER_CMD) exec -w /usr/src/app/frontend frontend bash
+
+shell-redis: ## login running redis container
+	@$(DOCKER_CMD) exec redis redis-cli
 
 build: ## build for deploy
 	@docker buildx build --platform linux/amd64 --file $(REPO_ROOT)/dev/backend/build.Dockerfile --build-arg IMAGE_GO=$(IMAGE_GO) --build-arg IMAGE_GO_PROD=$(IMAGE_GO_PROD) --build-arg VERSION_XX=$(VERSION_XX) --build-arg LDFLAGS=$(LDFLAGS_PROD) --tag $(REPO_NAME)-prod-backend $(REPO_ROOT)

@@ -1,5 +1,5 @@
-DOCKER_CMD=REPO_NAME=$(REPO_NAME) REPO_ROOT=$(REPO_ROOT) DOMAIN_PROD=$(DOMAIN_PROD) API_DOMAIN_PROD=$(API_DOMAIN_PROD) docker compose -f $(REPO_ROOT)/prod/docker-compose.yml
-DOCKER_ROLLOUT_CMD=REPO_NAME=$(REPO_NAME) REPO_ROOT=$(REPO_ROOT) DOMAIN_PROD=$(DOMAIN_PROD) API_DOMAIN_PROD=$(API_DOMAIN_PROD) docker rollout -f $(REPO_ROOT)/prod/docker-compose.yml
+DOCKER_CMD=REPO_NAME=$(REPO_NAME) REPO_ROOT=$(REPO_ROOT) IMAGE_REDIS=$(IMAGE_REDIS) DOMAIN_PROD=$(DOMAIN_PROD) API_DOMAIN_PROD=$(API_DOMAIN_PROD) docker compose -f $(REPO_ROOT)/prod/docker-compose.yml
+DOCKER_ROLLOUT_CMD=REPO_NAME=$(REPO_NAME) REPO_ROOT=$(REPO_ROOT) IMAGE_REDIS=$(IMAGE_REDIS) DOMAIN_PROD=$(DOMAIN_PROD) API_DOMAIN_PROD=$(API_DOMAIN_PROD) docker rollout -f $(REPO_ROOT)/prod/docker-compose.yml
 
 docker: ## setup docker on new server
 	@sudo sysctl -w net.core.rmem_max=7500000
@@ -14,6 +14,9 @@ shell-db: ## login running db container
 
 shell-frontend: ## login running frontend container
 	@$(DOCKER_CMD) exec -w /usr/share/nginx/html frontend sh
+
+shell-redis: ## login running redis container
+	@$(DOCKER_CMD) exec redis redis-cli
 
 init: ## init on new server, this also runs `make migrate` to create db first.
 	@docker load < $(REPO_ROOT)/tmp/$(REPO_NAME)-prod-backend.tar.gz

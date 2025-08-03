@@ -34,6 +34,9 @@ services:
       - ${REPO_ROOT}:/usr/src/app
       - ${REPO_ROOT}/data:/data
 
+  redis:
+    image: ${IMAGE_REDIS}
+
   frontend:
     build:
       context: ${REPO_ROOT}

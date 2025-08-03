@@ -30,6 +30,10 @@ services:
     networks:
       - traefik-containers
 
+  redis:
+    image: ${IMAGE_REDIS}
+    restart: always
+
 networks:
   traefik-containers:
     external: true

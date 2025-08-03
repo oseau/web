@@ -11,6 +11,7 @@ IMAGE_GO_PROD?=gcr.io/distroless/base-debian12
 IMAGE_NODE?=node:24.2.0-bookworm
 IMAGE_NGINX?=nginx:1.28.0-alpine
 IMAGE_UV?=ghcr.io/astral-sh/uv:python3.13-bookworm-slim
+IMAGE_REDIS?=redis:8.0.3-alpine
 # git@github.com:user/repo.git or https://github.com/user/repo.git
 # => github.com/user/repo
 REPO?=$(shell git config --get remote.origin.url | sed -E 's|git@||; s|https://||; s|\.git$$||; s|:|/|')
@@ -26,7 +27,7 @@ LDFLAGS?="-X 'github.com/oseau/web.VersionString=dev' -X 'github.com/oseau/web/c
 LDFLAGS_PROD?="-X 'github.com/oseau/web.VersionString=$(GIT_COMMIT)$(GIT_DIRTY)' -X 'github.com/oseau/web/cmd/http.URLFrontend=https://$(DOMAIN_PROD)'"
 API_URL?=https://api.$(REPO_NAME).orb.local
 API_URL_PROD?=https://$(API_DOMAIN_PROD)
-DOCKER_CMD=COMPOSE_BAKE=true REPO_NAME=$(REPO_NAME) REPO_ROOT=$(REPO_ROOT) IMAGE_GO=$(IMAGE_GO) VERSION_STATICCHECK=$(VERSION_STATICCHECK) VERSION_REVIVE=$(VERSION_REVIVE) LDFLAGS=$(LDFLAGS) IMAGE_NODE=$(IMAGE_NODE) API_URL=$(API_URL) IMAGE_UV=$(IMAGE_UV) docker compose -f $(REPO_ROOT)/dev/docker-compose.yml
+DOCKER_CMD=COMPOSE_BAKE=true REPO_NAME=$(REPO_NAME) REPO_ROOT=$(REPO_ROOT) IMAGE_GO=$(IMAGE_GO) VERSION_STATICCHECK=$(VERSION_STATICCHECK) VERSION_REVIVE=$(VERSION_REVIVE) LDFLAGS=$(LDFLAGS) IMAGE_NODE=$(IMAGE_NODE) API_URL=$(API_URL) IMAGE_UV=$(IMAGE_UV) IMAGE_REDIS=$(IMAGE_REDIS) docker compose -f $(REPO_ROOT)/dev/docker-compose.yml
 IMAGE_TQDM?=tqdm/tqdm:4.67.1 # to display progress bar
 
 
