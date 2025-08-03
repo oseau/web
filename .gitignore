@@ -270,7 +270,7 @@ tags
 
 # End of https://www.toptal.com/developers/gitignore/api/macos,go,emacs,vim,node
 
-*.db
+data/
 
 # Temporary files for deployment
 tmp/

@@ -13,9 +13,10 @@ services:
     command: /usr/src/app/dev/backend/start-dev
     volumes:
       - ${REPO_ROOT}:/usr/src/app
+      - /usr/src/app/data # hide these db files, so that entr won't restart unnecessarily
       - go-modules:/go/pkg
       - go-build:/root/.cache/go-build
-      - ${REPO_ROOT}/db/web.db:/db/web.db
+      - ${REPO_ROOT}/data:/data # so that the .db-shm and .db-wal files are persisted
     depends_on:
       db:
         condition: service_completed_successfully
@@ -31,6 +32,7 @@ services:
     command: ["/usr/src/app/db/migrate"]
     volumes:
       - ${REPO_ROOT}:/usr/src/app
+      - ${REPO_ROOT}/data:/data
 
   frontend:
     build:

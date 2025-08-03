@@ -3,21 +3,35 @@ package db
 
 import (
 	"database/sql"
-	"log"
+	"log/slog"
+	"os"
 	"sync"
 )
 
-var once sync.Once
+var (
+	once sync.Once
+	db   *DB
+)
+
+// DB is the database
+type DB struct {
+	conn *sql.DB
+}
+
+// Close closes the database connection
+func (d *DB) Close() error {
+	return d.conn.Close()
+}
 
 // NewDB creates a new database connection
 func NewDB() *DB {
-	db := &DB{}
 	once.Do(func() {
-		conn, err := sql.Open("sqlite3", "/db/web.db")
+		conn, err := sql.Open("sqlite3", "/data/web.db")
 		if err != nil {
-			log.Fatal(err)
+			slog.Error("failed to open database", "error", err)
+			os.Exit(1)
 		}
-		db.conn = conn
+		db = &DB{conn: conn}
 	})
 	return db
 }

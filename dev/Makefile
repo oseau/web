@@ -8,7 +8,7 @@ shell-backend: ## login running backend container
 	@$(DOCKER_CMD) exec backend bash
 
 shell-db: ## start a new db container (uses compose-built image)
-	@docker run --rm -it -v $(REPO_ROOT):/usr/src/app -w /usr/src/app/db $(REPO_NAME)-db bash
+	@docker run --rm -it -v $(REPO_ROOT):/usr/src/app -v $(REPO_ROOT)/data:/data -w /usr/src/app/db $(REPO_NAME)-db bash
 
 shell-frontend: ## login running frontend container
 	@$(DOCKER_CMD) exec frontend bash

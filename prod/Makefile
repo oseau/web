@@ -10,7 +10,7 @@ docker: ## setup docker on new server
 
 shell-db: ## login running db container
 	@docker load < $(REPO_ROOT)/tmp/$(REPO_NAME)-prod-db.tar.gz
-	@docker run --rm -it -v $(REPO_ROOT)/db:/db -w /db $(REPO_NAME)-prod-db:latest bash
+	@docker run --rm -it -v $(REPO_ROOT):/usr/src/app -v $(REPO_ROOT)/data:/data -w /usr/src/app/db $(REPO_NAME)-prod-db:latest bash
 
 shell-frontend: ## login running frontend container
 	@$(DOCKER_CMD) exec -w /usr/share/nginx/html frontend sh

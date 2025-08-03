@@ -3,18 +3,8 @@ package db
 
 import (
 	"database/sql"
-	"log"
+	"log/slog"
 )
-
-// DB is the database
-type DB struct {
-	conn *sql.DB
-}
-
-// Close closes the database connection
-func (d *DB) Close() {
-	d.conn.Close()
-}
 
 // Count is a row in count table
 type Count struct {
@@ -27,16 +17,15 @@ func (d *DB) GetCount() Count {
 	row := d.conn.QueryRow(q)
 	count := Count{}
 	if err := row.Scan(&count.Count); err != nil && err != sql.ErrNoRows {
-		log.Fatal(err)
+		slog.Error("failed to get count", "error", err)
 	}
 	return count
 }
 
-// SetCount return the latest count
+// SetCount insert a new count record
 func (d *DB) SetCount(count int) {
 	q := "INSERT INTO count (count) VALUES (?)"
-	_, err := d.conn.Exec(q, count)
-	if err != nil {
-		log.Fatal(err)
+	if _, err := d.conn.Exec(q, count); err != nil {
+		slog.Error("failed to insert count", "error", err)
 	}
 }
