@@ -5,7 +5,6 @@ package http
 
 import (
 	"context"
-	"fmt"
 	"io"
 	"log/slog"
 	"net/http"
@@ -19,7 +18,6 @@ import (
 // Run starts the HTTP server
 func Run(ctx context.Context, w io.Writer) error {
 	ctx, cancel := signal.NotifyContext(ctx, os.Interrupt, syscall.SIGTERM)
-
 	defer cancel()
 
 	logger := slog.New(slog.NewTextHandler(w, nil))
@@ -32,7 +30,7 @@ func Run(ctx context.Context, w io.Writer) error {
 	go func() {
 		slog.Info("server listening...")
 		if err := httpServer.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			fmt.Fprintf(os.Stderr, "error listening and serving: %s\n", err)
+			slog.Error("error listening and serving", "error", err)
 		}
 	}()
 
@@ -48,14 +46,23 @@ func Run(ctx context.Context, w io.Writer) error {
 			select {
 			case <-ctx.Done():
 				// make a new context for the Shutdown (thanks Alessandro Rosetti)
-				shutdownCtx, cancel := context.WithTimeout(ctx, 10*time.Second)
-				defer cancel()
+				shutdownCtx, shutdownCancel := context.WithTimeout(ctx, 10*time.Second)
+				defer shutdownCancel()
 
 				// do some cleanup works before exit
 				if err := httpServer.Shutdown(shutdownCtx); err != nil {
-					fmt.Fprintf(os.Stderr, "error shutting down http server: %s\n", err)
+					slog.Error("error shutting down http server", "error", err)
 				} else {
-					slog.Info("shutting down server...")
+					slog.Info("shutting down http server...")
+				}
+
+				closeCtx, closeCancel := context.WithTimeout(ctx, 10*time.Second)
+				defer closeCancel()
+
+				if err := srv.Close(closeCtx); err != nil {
+					slog.Error("error closing server", "error", err)
+				} else {
+					slog.Info("closing server...")
 				}
 				return // returning to let the deferred cancel() run
 			case <-ticker.C:

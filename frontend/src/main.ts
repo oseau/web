@@ -26,14 +26,19 @@ document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
     </a>
     <h1>Vite + TypeScript + Stagewise</h1>
     <div class="card">
-      <button id="counter" type="button"></button>
+      <button id="click-count" type="button"></button>
     </div>
-    <p class="read-the-docs">
-      Click on the logos to learn more
-    </p>
     <p class="read-the-docs">
       Version: <span id="version">__VERSION__</span>
     </p>
+    <div class="stats">
+      <p>
+        Online users: <span id="online-count">0</span>
+      </p>
+      <p>
+        Views since last restart: <span id="view-count">0</span>
+      </p>
+    </div>
   </div>
 `;
 
@@ -41,5 +46,5 @@ window.addEventListener("load", async () => {
   document.getElementById("version")!.textContent = await (
     await fetch(`${import.meta.env.VITE_API_URL}/version`)
   ).text();
-  setupCounter(document.querySelector<HTMLButtonElement>("#counter")!);
+  setupCounter();
 });

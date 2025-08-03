@@ -35,3 +35,6 @@ update-frontend: ## load image and docker-rollout
 
 prune: ## prune all images and volumes
 	@docker system prune --all --volumes --force
+
+logs: ## tail logs
+	@$(DOCKER_CMD) logs -f

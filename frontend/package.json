@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "@stagewise/toolbar": "^0.5.0",
+    "@stagewise/toolbar": "^0.5.2",
     "typescript": "~5.8.3",
     "vite": "^6.3.5"
   }

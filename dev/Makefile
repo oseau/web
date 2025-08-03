@@ -1,6 +1,10 @@
 dev: ## start dev server for both backend & frontend (db will be created/migrated)
 	@$(DOCKER_CMD) up --build --renew-anon-volumes --remove-orphans
 
+lint: ## lint the code
+	@$(DOCKER_CMD) exec backend go mod tidy -v
+	@$(DOCKER_CMD) exec backend go run golang.org/x/tools/gopls/internal/analysis/modernize/cmd/modernize@latest -fix -test=false ./... # skip test files
+
 migrate: ## migrate/create db
 	@docker run --rm -it -v $(REPO_ROOT):/usr/src/app -w /usr/src/app/db $(REPO_NAME)-db /usr/src/app/db/migrate
 
@@ -26,3 +30,6 @@ rsync: ## rsync built images to remote server
 	@docker save $(REPO_NAME)-prod-frontend:latest | docker run --rm -i $(IMAGE_TQDM) --bytes --total $(shell docker image inspect "$(REPO_NAME)-prod-frontend:latest" --format='{{.Size}}') | gzip > $(REPO_ROOT)/tmp/$(REPO_NAME)-prod-frontend.tar.gz
 	@docker save $(REPO_NAME)-prod-db:latest | docker run --rm -i $(IMAGE_TQDM) --bytes --total $(shell docker image inspect "$(REPO_NAME)-prod-db:latest" --format='{{.Size}}') | gzip > $(REPO_ROOT)/tmp/$(REPO_NAME)-prod-db.tar.gz
 	@rsync -azvhP --delete --mkpath --checksum --exclude='*.db' --exclude='*.db-shm' --exclude='*.db-wal' --exclude='*.db-journal' --exclude='node_modules' --exclude='secrets' --exclude='.env' --exclude='.venv' --exclude='*.pem' --exclude='*.key' $(REPO_ROOT)/ $(REMOTE_ROOT)
+
+logs: ## tail logs
+	@$(DOCKER_CMD) logs -f
