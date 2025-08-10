@@ -3,15 +3,15 @@ SHELL := /usr/bin/env bash -o errexit -o pipefail -o nounset
 # avoid .env file if possible, it's error prone, and sooner or later you'll find yourself unable to run the project at all
 DOMAIN_PROD?=example.com
 API_DOMAIN_PROD?=api.example.com
-IMAGE_GO?=golang:1.24.4-bookworm
+IMAGE_GO?=golang:1.24.6-bookworm
 VERSION_STATICCHECK?=v0.6.1
 VERSION_REVIVE?=v1.10.0
 VERSION_XX?=1.6.1
 IMAGE_GO_PROD?=gcr.io/distroless/base-debian12
-IMAGE_NODE?=node:24.2.0-bookworm
-IMAGE_NGINX?=nginx:1.28.0-alpine
+IMAGE_NODE?=node:24.5.0-bookworm
+IMAGE_NGINX?=nginx:1.29.0-alpine
 IMAGE_UV?=ghcr.io/astral-sh/uv:python3.13-bookworm-slim
-IMAGE_REDIS?=redis:8.0.3-alpine
+IMAGE_REDIS?=redis:8.2.0-alpine
 # git@github.com:user/repo.git or https://github.com/user/repo.git
 # => github.com/user/repo
 REPO?=$(shell git config --get remote.origin.url | sed -E 's|git@||; s|https://||; s|\.git$$||; s|:|/|')

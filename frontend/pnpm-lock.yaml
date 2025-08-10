@@ -8,9 +8,6 @@ importers:
 
   .:
     devDependencies:
-      '@stagewise/toolbar':
-        specifier: ^0.5.2
-        version: 0.5.2
       typescript:
         specifier: ~5.8.3
         version: 5.8.3
@@ -276,9 +273,6 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@stagewise/toolbar@0.5.2':
-    resolution: {integrity: sha512-QxowY55dhYJS4iD3KuYCvmLl3jA74boYziEr9lent+NZpO1rjtF0KpDyld+hClA4lWnCVLPxhMwW69Qv2+xzjg==}
-
   '@types/estree@1.0.8':
     resolution: {integrity: sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==}
 
@@ -513,8 +507,6 @@ snapshots:
 
   '@rollup/rollup-win32-x64-msvc@4.46.2':
     optional: true
-
-  '@stagewise/toolbar@0.5.2': {}
 
   '@types/estree@1.0.8': {}
 

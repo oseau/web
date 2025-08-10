@@ -1,6 +1,6 @@
 module github.com/oseau/web
 
-go 1.24.4
+go 1.24.6
 
 require github.com/rs/cors v1.11.1
 
