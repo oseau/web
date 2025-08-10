@@ -1,6 +1,20 @@
 #!/usr/bin/env bash
 
+# Function to handle graceful shutdown
+cleanup() {
+    echo "Received shutdown signal, cleaning up..."
+    # Kill any running pnpm processes
+    pkill -f "pnpm" || true
+    exit 0
+}
+
+# Trap SIGTERM and SIGINT
+trap cleanup SIGTERM SIGINT
+
 cd /usr/src/app/frontend
 # fresh cloned repo need this
 [ ! -d "node_modules" ] && pnpm install
-pnpm run dev
+
+# Run pnpm dev in background and wait for it
+pnpm run dev &
+wait $!

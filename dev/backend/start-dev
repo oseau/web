@@ -1,5 +1,16 @@
 #!/usr/bin/env bash
 
+# Function to handle graceful shutdown
+cleanup() {
+    echo "Received shutdown signal, cleaning up..."
+    # Kill any running Go processes
+    pkill -f "go run" || true
+    exit 0
+}
+
+# Trap SIGTERM and SIGINT
+trap cleanup SIGTERM SIGINT
+
 while sleep 0.1
 do
 {
@@ -9,6 +20,9 @@ do
         && staticcheck ./... \
         && go vet ./... \
         && revive ./... \
-        && go run -ldflags \"\$LDFLAGS\" /usr/src/app/cmd/backend/*.go"
+        && go run -ldflags \"\$LDFLAGS\" /usr/src/app/cmd/backend/*.go" &
+
+    # Wait for the background process
+    wait $!
 }
 done
