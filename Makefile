@@ -3,7 +3,8 @@ SHELL := /usr/bin/env bash -o errexit -o pipefail -o nounset
 # avoid .env file if possible, it's error prone, and sooner or later you'll find yourself unable to run the project at all
 DOMAIN_PROD?=example.com
 API_DOMAIN_PROD?=api.example.com
-IMAGE_GO?=golang:1.24.6-bookworm
+# same debian version as prod distroless image
+IMAGE_GO?=golang:1.25.0-bookworm
 VERSION_STATICCHECK?=v0.6.1
 VERSION_REVIVE?=v1.10.0
 VERSION_XX?=1.6.1
