@@ -8,6 +8,7 @@ import (
 
 	"github.com/oseau/web/db"
 	"github.com/oseau/web/redis"
+	"github.com/oseau/web/ws"
 	"golang.org/x/sync/errgroup"
 )
 
@@ -16,7 +17,7 @@ type Server struct {
 	handler *Handler
 	db      *db.DB
 	redis   *redis.Redis
-	hub     *Hub
+	hub     *ws.Hub
 }
 
 var (
@@ -30,7 +31,7 @@ func NewServer() *Server {
 		srv = &Server{
 			db:    db.NewDB(),
 			redis: redis.NewRedis(),
-			hub:   NewHub(),
+			hub:   ws.NewHub(),
 		}
 		go srv.hub.Run()
 		srv.handler = NewHandler(srv.db, srv.redis, srv.hub)

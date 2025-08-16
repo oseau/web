@@ -24,8 +24,8 @@ REPO_ROOT?=$(shell git rev-parse --show-toplevel)
 REMOTE_ROOT?=nerd:~/repos/$(REPO_NAME)
 GIT_COMMIT?=$(shell git rev-parse --short HEAD)
 GIT_DIRTY?=$(shell test -n "`git status --porcelain`" && echo "+DIRTY" || true)
-LDFLAGS?="-X 'github.com/oseau/web.VersionString=dev' -X 'github.com/oseau/web/cmd/http.URLFrontend=https://$(REPO_NAME).orb.local'"
-LDFLAGS_PROD?="-X 'github.com/oseau/web.VersionString=$(GIT_COMMIT)$(GIT_DIRTY)' -X 'github.com/oseau/web/cmd/http.URLFrontend=https://$(DOMAIN_PROD)'"
+LDFLAGS?="-X 'github.com/oseau/web.VersionString=dev' -X 'github.com/oseau/web/http.URLFrontend=https://$(REPO_NAME).orb.local'"
+LDFLAGS_PROD?="-X 'github.com/oseau/web.VersionString=$(GIT_COMMIT)$(GIT_DIRTY)' -X 'github.com/oseau/web/http.URLFrontend=https://$(DOMAIN_PROD)'"
 API_URL?=https://api.$(REPO_NAME).orb.local
 API_URL_PROD?=https://$(API_DOMAIN_PROD)
 DOCKER_CMD=COMPOSE_BAKE=true REPO_NAME=$(REPO_NAME) REPO_ROOT=$(REPO_ROOT) IMAGE_GO=$(IMAGE_GO) VERSION_STATICCHECK=$(VERSION_STATICCHECK) VERSION_REVIVE=$(VERSION_REVIVE) LDFLAGS=$(LDFLAGS) IMAGE_NODE=$(IMAGE_NODE) API_URL=$(API_URL) IMAGE_UV=$(IMAGE_UV) IMAGE_REDIS=$(IMAGE_REDIS) docker compose -f $(REPO_ROOT)/dev/docker-compose.yml

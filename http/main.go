@@ -39,9 +39,7 @@ func Run(ctx context.Context, w io.Writer) error {
 	defer ticker.Stop()
 
 	var wg sync.WaitGroup
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
+	wg.Go(func() {
 		for {
 			select {
 			case <-ctx.Done():
@@ -69,7 +67,7 @@ func Run(ctx context.Context, w io.Writer) error {
 				// do something every minute
 			}
 		}
-	}()
+	})
 	wg.Wait()
 	return nil
 }

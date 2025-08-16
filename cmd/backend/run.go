@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/oseau/web/cmd/http"
+	"github.com/oseau/web/http"
 )
 
 // check https://npf.io/2016/10/reusable-commands/

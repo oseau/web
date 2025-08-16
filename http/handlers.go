@@ -9,17 +9,18 @@ import (
 	"github.com/oseau/web"
 	"github.com/oseau/web/db"
 	"github.com/oseau/web/redis"
+	"github.com/oseau/web/ws"
 )
 
 // Handler holds the db
 type Handler struct {
 	db    *db.DB
 	redis *redis.Redis
-	hub   *Hub
+	hub   *ws.Hub
 }
 
 // NewHandler create the Handler
-func NewHandler(db *db.DB, redis *redis.Redis, hub *Hub) *Handler {
+func NewHandler(db *db.DB, redis *redis.Redis, hub *ws.Hub) *Handler {
 	return &Handler{
 		db:    db,
 		redis: redis,
@@ -65,9 +66,5 @@ func (h *Handler) ws(w http.ResponseWriter, r *http.Request) {
 		slog.Error("failed to upgrade websocket connection", "error", err)
 		return
 	}
-	client := &Client{hub: h.hub, conn: conn, send: make(chan []byte), ready: make(chan struct{})}
-	go client.writePump()
-	go client.readPump()
-	<-client.ready // wait for the client to be ready to receive messages
-	client.hub.register <- client
+	ws.NewClient(h.hub, conn)
 }
