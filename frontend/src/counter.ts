@@ -5,7 +5,7 @@ export async function setupCounter() {
   const resp = await (
     await fetch(`${import.meta.env.VITE_API_URL}/count`)
   ).json();
-  click.innerHTML = `count is ${resp.click}`;
+  click.innerHTML = `(db) count is ${resp.click}`;
   view.innerHTML = resp.view;
   click.addEventListener("click", async () => {
     const resp = await (

@@ -16,14 +16,14 @@ document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
       <button id="click-count" type="button"></button>
     </div>
     <p class="read-the-docs">
-      Version: <span id="version">__VERSION__</span>
+      (git hash env) Version: <span id="version">__VERSION__</span>
     </p>
     <div class="stats">
       <p>
-        Online users: <span id="online-count">0</span>
+        (ws broadcasts) Online users: <span id="online-count">0</span>
       </p>
       <p>
-        Views since last restart: <span id="view-count">0</span>
+        (redis) Views since last restart: <span id="view-count">0</span>
       </p>
     </div>
   </div>
